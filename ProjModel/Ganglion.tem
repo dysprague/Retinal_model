@@ -1,0 +1,39 @@
+begintemplate Ganglion
+
+ public soma,spiketimes, spikecount
+ create soma
+  objref spikecount, spiketimes,vc
+
+
+  
+  proc init() { 
+    create soma
+    spiketimes = new Vector()
+    soma {
+       L=25
+       diam=25
+       insert pas
+       e_pas=-65
+       g_pas=.00005
+       Ra=110
+       insert spike
+       gkbar_spike = 0.012
+       gabar_spike = 0.036
+       gcabar_spike = 0.0022
+       gkcbar_spike = 0.00005
+       celsius = 22
+       ena=35
+       ek=-75
+       insert cad
+       depth_cad = 3 // (micron)
+       taur_cad = 10 // (ms)
+       spikecount = new APCount(0.5)
+       spikecount.thresh = -30
+       spikecount.record(spiketimes)
+       vc = new VClamp(0.5)
+       vc.dur[0]=100
+       vc.amp[0]=-65
+    }
+  }	// end init()
+
+endtemplate Ganglion

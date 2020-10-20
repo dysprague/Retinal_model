@@ -1,0 +1,69 @@
+// Parameters for Init.hoc
+
+// Simulation Parameters
+
+celsius = 23			// from Chen et al bipolar cell
+v_init = -41.5
+ENABLE_GRAPHICAL_INTERFACE = 1
+MAXNUMBERCONNECTIONS = 50000
+seed        = 0			// seed for random number generator
+tstop	    = 6000		// ms  total simulation time
+stim_init = 100
+step_dt 	    = 0.1		// ms
+runStopAt = tstop
+steps_per_ms = 1/dt
+number_steps = steps_per_ms*tstop
+count=0
+amp=50
+gihbar=2.5
+PROB=0.5
+
+
+// Network parameters
+
+//First gap layer
+
+nrodx      =  50		// 1st dimension of rod cell array
+nrody      =  30		// 2nd dimension of rod cell array
+nconex       = 4		// 1st dimension of cone cell array
+nconey       = 4		// 2nd dimension of cone cell array
+rodtotal   = nrodx*nrody	// total number of Rods
+conetotal    = nconex*nconey	// total number of Cones
+
+//Bipolar layer
+
+nrodbipx       = 10			// 1st dimension of bipolar cell array
+nrodbipy       = 10			// 2nd dimension of bipolar cell array
+nconebipx       = 2			// 1st dimension of bipolar cell array
+nconebipy       = 2			// 2nd dimension of bipolar cell array
+biptotal    = nrodbipx*nrodbipy	+ nconebipx*nconebipy
+
+//A2 layer
+
+na2x      =  3			// 1st dimension of A2 cell array
+na2y      =  3			// 2nd dimension of A2 cell array
+A2total   = na2x*na2y
+
+// Output
+
+nganx      =  1		// 1st dimension of Ganglion cell array
+ngany      =  1		// 2nd dimension of Ganglion cell array
+gantotal   = nganx*ngany
+
+
+// Divergence
+
+rodtobip    = 2
+conetobip    = 1
+conetorod = 4	
+rodbiptoa2 = 3
+a2toconebip = 2
+conebiptogan = 1
+
+
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+begintemplate A2
+
+public soma 
+create soma
+objref vc
+  
+  proc init() { 
+    create soma
+
+    soma {
+    L=7	
+	diam=7 
+	nseg=1
+	insert pas
+	insert HHna
+	insert HHk
+	vc = new VClamp(0.5)
+    vc.dur[0]=100
+    vc.amp[0]=-70   
+    }
+  }	// end init()
+
+endtemplate A2
