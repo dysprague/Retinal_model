@@ -52,12 +52,22 @@ print "Creating cells. This may take some time."
 
 proc insert_iclamps() { local k,m,ii,jj   // 1 arg - amp 
 
+  zspacing = 37 //um
+  BPspacing = 3.54 //um
+  xelect = 2 //middle
+  yelect = 2
+  sigma_e = 2*10^-7 //1/ohm-um
+
+  rm = 24000*10^8 / (2*3.141*5^2+3.141*10*10) // ohms
+
   for k = 0, nrodbipx-1 {
     for m = 0, nrodbipy-1 {
       rod_bip[k][m].soma brightcurr[k][m] = new IinjLT(0.5)
       brightcurr[k][m].del = stim_init
       brightcurr[k][m].ton = 1500   //6000
-      brightcurr[k][m].amp =0
+      voltage = $1/(4*3.141*sigma_e*sqrt((zspacing)^2+((xelect-k-0.5)*BPspacing)^2+((yelect-m-0.5)*BPspacing)^2))
+      printf("%f Volt/rm\n", (voltage/rm)*10^9)
+      brightcurr[k][m].amp = (voltage / rm) *10^9    
       
       rod_bip[k][m].soma dimcurr[k][m] = new IinjLTDim(0.5)
       dimcurr[k][m].del = stim_init
@@ -76,20 +86,13 @@ proc insert_iclamps() { local k,m,ii,jj   // 1 arg - amp
 	// }
    // }
 
-  for i=0, nrodbipx-1 { //Randomly Assign the Current Values to be Dark or Light
-    for j = 0, nrodbipy-1{
-        if (i <=3 && j<=3){
-        brightcurr[i][j].amp = $1
-        }else{
-        dimcurr[i][j].amp = 0//$1
-        }	
-     }
-  }
+  printf("%f Brightcurrent[3][3]\n", brightcurr[1][1].i)
 
 } // end proc
 
 
   printf("\n")
+
   access rod_bip[0][0].soma
 
 printf ("%d Bipolar cells created\n",nrodbipx*nrodbipy)
