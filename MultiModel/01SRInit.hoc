@@ -1,0 +1,74 @@
+/*  Retina Model - SiSNe 
+Ribeirao Preto - S.P. - BRAZIL
+Author : Rodrigo Publio - publio@oist.jp 
+Last Version - 06/2009. */
+
+load_file("nrngui.hoc")	
+load_file("02NewParams.hoc")
+load_file("05NewCreateCells.hoc")
+load_file("gap.hoc")
+load_file("04NewNC.hoc")
+
+//============================Simulation Control=======================
+
+proc step() {
+
+   if (ENABLE_GRAPHICAL_INTERFACE) Plot()
+   fadvance()   
+  }
+
+proc init() {
+	
+  finitialize()
+  fcurrent()
+  dt=step_dt
+ }
+ 
+//create_matrix(5,nrodbipx*nrodbipy)
+
+
+proc start() {	local i,j
+
+count=0
+printf("Amp=%g\n",amp)
+insert_iclamps(amp,10+amp) //defined at createcells.hoc
+A2_gaps(0.25)   // defined at netconnection.hoc
+Glursyn()       // defined at netconnection.hoc
+load_file("03NewSession.ses")
+
+init()
+run()
+      
+} // end proc start
+ 
+tstop=1
+run()
+init() 
+tstop=10000 
+ 
+xpanel("Publio et al. 2009")	      
+xlabel("Press below button to start simulation:")	      
+xbutton("Start (takes 90 seconds","start()")	      
+xpanel()
+
+
+// objref Vm_vec_gan
+// Vm_vec_gan = new Vector(number_steps,0)
+// Vm_vec_gan.record(&GAN[0][0].soma.v(0.5),step_dt)
+// checker = 0
+// spikecount = 0
+// hhhhhhh = Vm_vec_gan[0]
+// printf("Spikecount=%g\n", hhhhhhh) 
+// for counter = 10000, 20000 {   // Dark current in cones
+     // if (GAN[0][0].soma.v(0.5)[counter]< 0){
+        // if (checker == 1){
+            // spikecount = spikecount + 1
+            // checker = 0
+        // }
+     // }else{
+        // if (checker == 0){
+            // checker = 1
+        // }
+     // }
+   // }
+// printf("Spikecount=%g\n", spikecount)  

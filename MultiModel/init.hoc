@@ -1,0 +1,58 @@
+/*  Retina Model - SiSNe 
+
+Ribeirao Preto - S.P. - BRAZIL
+
+Author : Rodrigo Publio - publio@oist.jp 
+
+Last Version - 06/2009. */
+
+
+load_file("nrngui.hoc")	
+load_file("parameters.hoc")
+load_file("createcells.hoc")
+load_file("gap.hoc")
+load_file("netconnection.hoc")
+
+//============================Simulation Control=======================
+
+proc step() {
+
+   if (ENABLE_GRAPHICAL_INTERFACE) Plot()
+   fadvance()   
+  }
+
+proc init() {
+	
+  finitialize()
+  fcurrent()
+  dt=step_dt
+ }
+ 
+//create_matrix(5,nrodbipx*nrodbipy)
+
+proc start() {	local i,j
+
+count=0
+printf("Amp=%g\n",amp)
+insert_iclamps(amp,10+amp) //defined at createcells.hoc
+block_ih(gihbar) // defined at createcells.hoc
+rod_gaps(PROB)  // defined at netconnection.hoc
+A2_gaps(0.25)   // defined at netconnection.hoc
+Glursyn()       // defined at netconnection.hoc
+load_file("session.ses")
+
+
+init()
+run()
+             
+} // end proc start
+ 
+tstop=1
+run()
+init() 
+tstop=10000 
+ 
+xpanel("Publio et al. 2009")	      
+xlabel("Press below button to start simulation:")	      
+xbutton("Start (takes 1/2 hr on 2.8 GHz Pentium 4)","start()")	      
+xpanel()	      

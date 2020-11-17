@@ -1,0 +1,97 @@
+//=================================================================
+//                  Load cells templates			  //		
+//=================================================================
+
+load_file("Bip.tem")
+load_file("A2.tem")
+load_file("Ganglion.tem")
+				
+objref rod_bip[nrodbipx][nrodbipy]
+objref A2_cell[na2x][na2y],GAN[nganx][ngany], cone_bip[nconebipx][nconebipy]
+objref brightcurr[nrodbipx][nrodbipy],dimcurr[nrodbipx][nrodbipy],input_cone[nconebipx][nconebipy],random
+random = new Random(seed)
+
+//=================================================================
+//                      Create cells				  //		
+//=================================================================
+print "Creating cells. This may take some time."
+
+// Create Rod bipolar cell
+  for i = 0, nrodbipx-1 {
+    for j = 0, nrodbipy-1 {
+      rod_bip[i][j] = new Bip()
+    }
+  }
+
+// Create Cone bipolar cell
+  for i = 0, nconebipx-1 {
+    for j = 0, nconebipy-1 {
+      cone_bip[i][j] = new Bip()
+      cone_bip[i][j].soma.gkabar_IA(0.5) = 0   // USUI et al.
+    }
+  }
+
+// Create A2
+  for i = 0, na2x-1 {
+    for j = 0, na2y-1 {
+      A2_cell[i][j] = new A2()
+    }
+  }
+
+
+// Create Ganglion
+  for i = 0, nganx-1 {
+    for j = 0, ngany-1 {
+      GAN[i][j] = new Ganglion()
+    }
+  }
+
+//=================================================================
+//                      Add input currents		       	  //		
+//=================================================================
+
+proc insert_iclamps() { local k,m,ii,jj   // 1 arg - amp 
+
+  for k = 0, nrodbipx-1 {
+    for m = 0, nrodbipy-1 {
+      rod_bip[k][m].soma brightcurr[k][m] = new IinjLT(0.5)
+      brightcurr[k][m].del = stim_init
+      brightcurr[k][m].ton = 1500   //6000
+      brightcurr[k][m].amp =0
+      
+      rod_bip[k][m].soma dimcurr[k][m] = new IinjLTDim(0.5)
+      dimcurr[k][m].del = stim_init
+      dimcurr[k][m].ton = 1500      //6000
+      dimcurr[k][m].ssI=0
+      dimcurr[k][m].amp =0 
+	}
+   }
+   
+  // for k = 0, nconebipx-1 {   // Dark current in cones
+    // for m = 0, nconebipy-1 {
+      // cone_bip[k][m].soma input_cone[k][m] = new IinjLT_cone(0.5)
+      // input_cone[k][m].amp= 0
+      // input_cone[k][m].del = 0
+      // input_cone[k][m].ton = 1500       //6000
+	// }
+   // }
+
+  for i=0, nrodbipx-1 { //Randomly Assign the Current Values to be Dark or Light
+    for j = 0, nrodbipy-1{
+        if (i <=3 && j<=3){
+        brightcurr[i][j].amp = $1
+        }else{
+        dimcurr[i][j].amp = 0//$1
+        }	
+     }
+  }
+
+} // end proc
+
+
+  printf("\n")
+  access rod_bip[0][0].soma
+
+printf ("%d Bipolar cells created\n",nrodbipx*nrodbipy)
+printf ("%d A2 Amacrine cells created\n",A2total)
+printf ("%d Ganglion cells created\n",gantotal)
