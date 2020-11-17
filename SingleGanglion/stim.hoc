@@ -1,0 +1,81 @@
+// $Id: stim.hoc,v 1.5 2009/02/24 00:55:27 ted Exp ted $
+/* The stimulus is constructed from a waveform template 
+that is copied to a Vector.
+For each section that has the xtra mechanism, this Vector 
+is used to drive is_xtra.
+The transfer resistance rx_xtra takes care of the 
+amplitude and sign of the local extracellular field.
+*/
+
+
+// create basic stimulus waveform
+// for this example use a simple rectangular pulse 
+
+// default values
+DEL = 1  // ms
+DUR = 1
+AMP = -0.05  // mA
+
+// this works with fixed dt and adaptive integration
+objref stim_amp, stim_time
+stim_amp = new Vector()
+stim_time = new Vector()
+
+proc stim_waveform() {
+  // this uses interpolated play
+  // index    0  1    2    3        4        5
+  // stim vec 0, 0,   1,   1,       0        0
+  // time vec 0, DEL, DEL, DEL+DUR, DEL+DUR, DEL+DUR+1
+  //  really  0, $1,  $1,  $1+$2,   $1+$2,   $1+$2+1
+  // first the stim vector
+  stim_amp.resize(6)
+  stim_amp.fill(0)
+  stim_amp.x[2]=1
+  stim_amp.x[3]=1
+  stim_amp.mul($3)
+  // now the time vector
+  stim_time.resize(6)
+  stim_time.x[1]=$1
+  stim_time.x[2]=$1
+  stim_time.x[3]=$1+$2
+  stim_time.x[4]=$1+$2
+  stim_time.x[5]=$1+$2+1
+}
+
+
+ATTACHED__ = 0
+
+proc attach_stim() {
+// since is_xtra is GLOBAL, we only need to specify Vector.play()
+// for one instance of xtra, i.e. at just one internal node
+// of only one section that contains xtra
+  forall {  // check each section to find one that has xtra
+    if (ATTACHED__ == 0) {  // don't bother if stim is already attached to something
+      if (ismembrane("xtra")) {
+        stim_amp.play(&is_xtra, stim_time, 1) // "interpolated" play
+        ATTACHED__ = 1
+      }
+    }
+  }
+}
+
+
+proc setstim() {
+  del = $1
+  dur = $2
+  amp = $3
+  stim_waveform(del, dur, amp)
+  attach_stim()
+}
+
+
+setstim(DEL, DUR, AMP)
+
+print "Use setstim(del, dur, amp) to change latency (ms), duration (ms),"
+print "and amplitude (mA) of extracellular stimulus current."
+
+xpanel("Extracellular Stimulus Current", 0)
+  xvalue("del (ms)", "DEL", 1, "setstim(DEL,DUR,AMP)", 0, 1)
+  xvalue("dur (ms)", "DUR", 1, "setstim(DEL,DUR,AMP)", 0, 1)
+  xvalue("amp (mA)", "AMP", 1, "setstim(DEL,DUR,AMP)", 0, 1)
+xpanel(73,497)

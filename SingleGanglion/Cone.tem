@@ -1,0 +1,24 @@
+begintemplate Cone
+
+public soma 
+create soma
+
+proc init(){
+create soma
+ 
+soma {
+nseg=1
+diam=10  
+L=10/PI 
+cm=16  
+
+ 
+ insert CPR
+ insert Kv_cone
+ insert h_cone
+v_init = -42
+    
+    }
+} // end init
+
+endtemplate Cone

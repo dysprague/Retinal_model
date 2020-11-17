@@ -1,0 +1,18 @@
+// $Id: initxstim.hoc,v 1.2 2005/09/10 23:02:15 ted Exp $
+// extracellular recording from model subjected to extracellular stimulation
+load_file("nrngui.hoc")
+load_file("cell.ses") // specifies anatomical and biophysical properties of the cell
+
+load_file("anatscale.hoc")	// show xyz scale bars
+load_file("interpxyz.hoc")	// only interpolates sections that have extracellular
+load_file("setpointers.hoc")	// automatically calls grindaway() in interpxyz.hoc
+load_file("rigc.ses")		// RunControl, graphs of v, vext, e_extracellular
+load_file("rigxc.ses")		// graph of er_xtra, just for diagnostic|development purposes
+load_file("field.hoc")		// computes extracellularly recorded potential vrec
+load_file("vrecc.ses")		// graph of vrec(t)
+load_file("calcrxc.hoc")	// computes transfer r between segments and recording electrodes
+                          // may require modification for particular electrode geometries
+// load_file("iclampc.ses")	// intracellular stimulus
+load_file("stim.hoc")		// extracellular stimulus
+                        // may require modification for particular stimulus protocols
+load_file("msgxc.hoc")		// minimal hints

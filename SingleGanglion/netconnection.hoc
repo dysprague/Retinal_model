@@ -1,0 +1,244 @@
+
+objref Glur2rodbip[nrodx][nrody],Glur2conebip[nconex][nconey],prob
+objref Glurrodbip2A2[nrodbipx][nrodbipy],Glurconebip2GAN[nconebipx][nconebipy]
+objref CellConection[MAXNUMBERCONNECTIONS], GAP_rod2cone[MAXNUMBERCONNECTIONS] 
+objref a2GAPa2[MAXNUMBERCONNECTIONS],GAP_A2conebip[MAXNUMBERCONNECTIONS]
+prob = new Random(seed)
+
+
+  print "Connecting cells"
+
+//=================================================================
+//                Gap Juntions in Receptors layer		  //		
+//=================================================================
+
+
+
+proc rod_gaps() {
+
+// $1 Connection Prob
+
+ for i = 0, nrodx-1 {
+    for j = 0, nrody-2 {
+       aprob = prob.uniform(0, 1) 
+       if (aprob <= $1) { 
+
+    CellConection[NumberConections] = new Gap()
+	rod[i][j].soma CellConection[NumberConections].src(0.95)    
+	rod[i][j+1].soma CellConection[NumberConections].target(0.95)
+    CellConection[NumberConections].g(0.5)
+	 
+    NumberConections = NumberConections + 1
+
+      }
+   }
+}
+
+ for j = 0, nrody-1 {
+    for i = 0, nrodx-2 {
+
+       aprob = prob.uniform(0, 1)
+       if (aprob <= $1 ) {
+
+    CellConection[NumberConections] = new Gap()
+	rod[i][j].soma CellConection[NumberConections].src(0.95)    
+	rod[i+1][j].soma CellConection[NumberConections].target(0.95)
+    CellConection[NumberConections].g(0.5)
+
+      NumberConections = NumberConections + 1
+      }
+  }
+}
+
+// Gap Juntions Rod - Cones , each cone coupled with up to 4 rods, zhang et al.
+NUMBERGAPS = 0
+
+  for i = 0, nconex-1 {
+    for j = 0, nconey-1 {
+    
+    ii = int(prob.uniform(0, nrodx))
+	if (ii == nrodx ) { ii=nrodx-1 }
+    jj = int(prob.uniform(0, nrody))
+	if (jj == nrody ) { jj=nrody-1 }
+    count=0
+    aprob = prob.uniform(0, 1)
+    if (aprob <= $1 ) {
+	
+    GAP_rod2cone[NUMBERGAPS] = new Gap()
+  	rod[ii][jj].soma  GAP_rod2cone[NUMBERGAPS].src(0.95)
+  	rod[ii+count][jj].soma  GAP_rod2cone[NUMBERGAPS].src(0.95)
+  	rod[ii][jj+count].soma  GAP_rod2cone[NUMBERGAPS].src(0.95)
+  	rod[ii+count][jj+count].soma  GAP_rod2cone[NUMBERGAPS].src(0.95)    
+	cone[i][j].soma  GAP_rod2cone[NUMBERGAPS].target(0.95)
+	GAP_rod2cone[NUMBERGAPS].g(0.5)
+
+	NUMBERGAPS = NUMBERGAPS + 1
+    count=count+1   
+     }
+   } 
+  }
+} // end proc
+
+//=================================================================
+//                Gap Juntions in A2 layer		 				 //		
+//=================================================================
+
+NUMBERGAPS = 0
+proc A2_gaps() {
+
+ for i = 0, na2x-1 {
+    for j = 0, na2y-2 {
+       
+       aprob = prob.uniform(0, 1) 
+       if (aprob <= $1 ) { 
+
+    a2GAPa2[NUMBERGAPS] = new Gap()
+	A2_cell[i][j].soma a2GAPa2[NUMBERGAPS].src(0.95)    
+	A2_cell[i][j+1].soma a2GAPa2[NUMBERGAPS].target(0.95)
+	a2GAPa2[NUMBERGAPS].g(2) 
+        
+ 
+      NUMBERGAPS = NUMBERGAPS + 1
+
+      }
+   }
+}
+
+ for j = 0, na2y-1 {
+    for i = 0, na2x-2 {
+
+       aprob = prob.uniform(0, 1)
+       if (aprob <= $1 ) {
+
+        a2GAPa2[NUMBERGAPS] = new Gap()
+	A2_cell[i][j].soma a2GAPa2[NUMBERGAPS].src(0.95)    
+	A2_cell[i+1][j].soma a2GAPa2[NUMBERGAPS].target(0.95)
+	a2GAPa2[NUMBERGAPS].g(2) 
+
+      NUMBERGAPS = NUMBERGAPS + 1
+      }
+    }
+  }
+
+// Gap Juntions A2-Cone Bipolar , each A2 coupled to 2 bipolar Sterling et al.1988.
+
+NUMBERGAPS = 0
+  for i = 0, nconebipx-1 {
+    for j = 0, nconebipy-1 {
+       for k = 1, a2toconebip {
+         aprob = prob.uniform(0, 1)
+       if (aprob <= $1 ) {
+  
+	ii = int(prob.uniform(0, na2x))
+	if (ii == na2x ) { ii=na2x-1 }
+        jj = int(prob.uniform(0, na2y))
+	if (jj == na2y ) { jj=na2y-1 }
+	GAP_A2conebip[NUMBERGAPS] = new Gap()
+	A2_cell[ii][jj].soma GAP_A2conebip[NUMBERGAPS].src(0.95)    
+	cone_bip[i][j].soma GAP_A2conebip[NUMBERGAPS].target(0.95)
+    GAP_A2conebip[NUMBERGAPS].g(0.5) 
+
+	NUMBERGAPS = NUMBERGAPS + 1
+      
+       } 
+      }
+    }
+  }
+
+
+} // end proc
+
+//=================================================================
+//                Glutamate Chemical synapses		         //		
+//=================================================================
+
+proc Glursyn () {
+
+// Glutamate Synapse Rod - Bipolar
+
+  for i = 0, nrodx-1 {
+    for j = 0, nrody-1 {
+      for k = 1, rodtobip {
+        
+	ii = int(prob.uniform(0, nrodbipx))
+	if (ii == nrodbipx ) { ii=nrodbipx-1 }
+    jj = int(prob.uniform(0, nrodbipy))
+	if (jj == nrodbipy ) { jj=nrodbipy-1 }
+    Glur2rodbip[i][j] = new GradSyn()						
+   	rod_bip[ii][jj].soma Glur2rodbip[i][j].loc(1)		// Post synaptic compartment	
+   	setpointer Glur2rodbip[i][j].V_pre, rod[i][j].soma.v(1)	
+	Glur2rodbip[i][j].e = 0
+	Glur2rodbip[i][j].V_thr = -44
+       
+
+      }
+    }
+  }
+  
+  // Glutamate Synapse Cone - Bipolar
+
+  for i = 0, nconex-1 {
+    for j = 0, nconey-1 {
+      for k = 1, conetobip {
+        
+	ii = int(prob.uniform(0, nconebipx))
+	if (ii == nconebipx ) { ii=nconebipx-1 }
+    jj = int(prob.uniform(0, nconebipy))
+	if (jj == nconebipy ) { jj=nconebipy-1 }
+    Glur2conebip[i][j] = new GradSyn()						
+   	cone_bip[ii][jj].soma Glur2conebip[i][j].loc(1)		// Post synaptic compartment	
+   	setpointer Glur2conebip[i][j].V_pre, cone[i][j].soma.v(1)	
+	Glur2conebip[i][j].e = 0
+	Glur2conebip[i][j].V_thr = -42
+       
+
+      }
+    }
+  }
+  
+  // Glutamate Synapse Rod Bipolar - A2
+
+  for i = 0, nrodbipx-1 {
+    for j = 0, nrodbipy-1 {
+      for k = 1, rodbiptoa2 {
+        
+	ii = int(prob.uniform(0, na2x))
+	if (ii == na2x ) { ii=na2x-1 }
+        jj = int(prob.uniform(0, na2y))
+	if (jj == na2y ) { jj=na2y-1 }
+	//    if (i==9&&j==9){print ii,jj}
+
+        Glurrodbip2A2[i][j] = new GradSyn_bip_gan()					
+   	A2_cell[ii][jj].soma Glurrodbip2A2[i][j].loc(1)		// Post synaptic compartment	
+   	setpointer Glurrodbip2A2[i][j].V_pre, rod_bip[i][j].soma.v(1)	
+	Glurrodbip2A2[i][j].e = 0
+	Glurrodbip2A2[i][j].V_thr = -37.4
+       
+
+      }
+    }
+  }
+  
+  // Glutamate Synapse Cone Bipolar - Gan
+
+  for i = 0, nconebipx-1 {
+    for j = 0, nconebipy-1 {
+      for k = 1, conebiptogan {
+        
+	ii = int(prob.uniform(0, nganx))
+	if (ii == nganx ) { ii=nganx-1 }
+        jj = int(prob.uniform(0, nconebipy))
+	if (jj == ngany ) { jj=ngany-1 }
+        Glurconebip2GAN[i][j] = new GradSyn_bip_gan()						
+   	GAN[ii][jj].soma Glurconebip2GAN[i][j].loc(1)		// Post synaptic compartment	
+   	setpointer Glurconebip2GAN[i][j].V_pre, cone_bip[i][j].soma.v(1)	
+	Glurconebip2GAN[i][j].e = 0
+	Glurconebip2GAN[i][j].V_thr = -37.28
+       
+
+      }
+    }
+  }
+
+
+} // end proc
