@@ -1,0 +1,43 @@
+// Parameters for Init.hoc
+// Simulation Parameters
+
+celsius = 23			// from Chen et al bipolar cell
+v_init = -41.5
+ENABLE_GRAPHICAL_INTERFACE = 1
+MAXNUMBERCONNECTIONS = 50000
+seed        = 5		// seed for random number generator
+tstop	    = 3500		// ms  total simulation time
+stim_init = 100
+step_dt 	    = 0.1		// ms
+runStopAt = tstop
+steps_per_ms = 1/dt
+number_steps = steps_per_ms*tstop
+count=0
+amp= -400             //
+gihbar=2.5
+PROB=0.25
+
+
+// Network parameters
+
+//Bipolar layer
+nrodbipx       = 8 		// 1st dimension of bipolar cell array
+nrodbipy       = 8			// 2nd dimension of bipolar cell array
+nconebipx       = 4 		// 1st dimension of bipolar cell array
+nconebipy       = 4			// 2nd dimension of bipolar cell array
+biptotal    = nrodbipx*nrodbipy	+ nconebipx*nconebipy
+
+//A2 layer
+na2x      =  4			// 1st dimension of A2 cell array
+na2y      =  4			// 2nd dimension of A2 cell array
+A2total   = na2x*na2y
+
+// Ganglion
+nganx      =  2		// 1st dimension of Ganglion cell array
+ngany      =  2		// 2nd dimension of Ganglion cell array
+gantotal   = nganx*ngany
+
+// Divergence
+rodbiptoa2 = 3
+a2toconebip = 2
+conebiptogan = 1
