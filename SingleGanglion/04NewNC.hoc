@@ -1,4 +1,3 @@
-
 objref prob
 objref Glurrodbip2A2[nrodbipx][nrodbipy],Glurconebip2GAN[nconebipx][nconebipy]
 objref CellConection[MAXNUMBERCONNECTIONS], GAP_rod2cone[MAXNUMBERCONNECTIONS] 
