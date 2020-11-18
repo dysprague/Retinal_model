@@ -13,7 +13,7 @@ runStopAt = tstop
 steps_per_ms = 1/dt
 number_steps = steps_per_ms*tstop
 count=0
-amp= -0.2        // mA stim at electrode
+amp= -0.005      // mA stim at electrode
 gihbar=2.5
 PROB=0.25
 
