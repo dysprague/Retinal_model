@@ -59,15 +59,30 @@ proc A2_gaps() {
 	//if (ii == na2x ) { ii=na2x-1 }
     //jj = int(prob.uniform(0, na2y))
 	//if (jj == na2y ) { jj=na2y-1 }
+    
+    
+    
 	GAP_A2conebip[NUMBERGAPS] = new Gap()
 	A2_cell[i][j].soma GAP_A2conebip[NUMBERGAPS].src(0.95)    //Modified
 	cone_bip[i][j].soma GAP_A2conebip[NUMBERGAPS].target(0.95)
     GAP_A2conebip[NUMBERGAPS].g(0.5) 
 
 	NUMBERGAPS = NUMBERGAPS + 1
-      
-      // } 
-      //}
+
+    carprob = prob.uniform(0, 1) 
+       if (carprob <= 0.15 ) {    // Can Increase chance. RN 25%
+            if (i == 0 || i == 1) { ii = 0}
+            if (i == 2 || i == 3) { ii = 2}
+            if (j == 0 || j == 1) { jj = 0}
+            if (j == 2 || j == 3) { jj = 2}
+            GAP_A2conebip[NUMBERGAPS] = new Gap()
+            A2_cell[i][j].soma GAP_A2conebip[NUMBERGAPS].src(0.95)    //Modified
+            cone_bip[ii][jj].soma GAP_A2conebip[NUMBERGAPS].target(0.95)
+            GAP_A2conebip[NUMBERGAPS].g(0.5) 
+
+            NUMBERGAPS = NUMBERGAPS + 1
+       }
+
     }
   }
 
@@ -100,6 +115,23 @@ proc Glursyn () {
    	setpointer Glurrodbip2A2[i][j].V_pre, rod_bip[i][j].soma.v(1)	
 	Glurrodbip2A2[i][j].e = 0
 	Glurrodbip2A2[i][j].V_thr = -37.4
+    
+    // carprob = prob.uniform(0, 1) 
+       // if (aprob <= 0.15 ) {    // Can Increase chance. RN 25%
+            // if (i == 0 || i == 1) { ii = 0}
+            // if (i == 2 || i == 3) { ii = 2}
+            // if (j == 0 || j == 1) { jj = 0}
+            // if (j == 2 || j == 3) { jj = 2}
+            // GAP_A2conebip[NUMBERGAPS] = new Gap()
+            // A2_cell[i][j].soma GAP_A2conebip[NUMBERGAPS].src(0.95)    //Modified
+            // cone_bip[ii][jj].soma GAP_A2conebip[NUMBERGAPS].target(0.95)
+            // GAP_A2conebip[NUMBERGAPS].g(0.5) 
+
+            // NUMBERGAPS = NUMBERGAPS + 1
+       // }
+    
+    
+    
        
       }
     }
